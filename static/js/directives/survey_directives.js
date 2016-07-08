@@ -1,23 +1,23 @@
-(function() {
-  'use strict';
+'use strict';
 
-  var module = angular.module('communityshare.directives.survey', [
-  ]);
+var angular = require( 'angular' );
 
-  module.directive(
-    'csQuestion',
-    function() {
-      return {
-        scope: {
-          question: '=',
-          answers: '='
-        },
-        controller: function($scope) {
-          // Set custom_answer to ' ' so that it is not initally
-          // selected.
-          $scope.custom_answer = ' ';
-        },
-        templateUrl: 'static/templates/question.html'
-      };
-    });
-})();
+var module = angular.module('communityshare.directives.survey', [
+]);
+
+module.directive(
+'csQuestion',
+function() {
+  return {
+    scope: {
+      question: '=',
+      answers: '='
+    },
+    controller: function($scope) {
+      // Set custom_answer to ' ' so that it is not initally
+      // selected.
+      $scope.custom_answer = ' ';
+    },
+    templateUrl: 'static/templates/question.html'
+  };
+});

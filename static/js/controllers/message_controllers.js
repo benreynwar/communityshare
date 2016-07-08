@@ -1,12 +1,12 @@
-(function() {
-  'use strict';
+'use strict';
 
-  var module = angular.module('communityshare.controllers.message', ['ngAnimate']);
+var angular = require( 'angular' );
 
-  module.controller(
-    'MessageController',
-    function ($scope, Messages) {
-      $scope.messages = Messages;
-    });
+var module = angular.module('communityshare.controllers.message', ['ngAnimate']);
 
-}());
+module.controller(
+'MessageController',
+function ($scope, Messages) {
+  $scope.messages = Messages;
+});
+
