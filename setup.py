@@ -14,20 +14,66 @@ from community_share import store, Base, config, setup_data
 
 logger = logging.getLogger(__name__)
 
-def make_email(first_name, last_name):
-    email = '{0}.{1}@example.com'.format(first_name, last_name)
-    return email
+skills = [
+    'accounting',
+    'biology',
+    'cooking',
+    'dinosaurs',
+    'farming',
+    'fish',
+    'horses',
+    'meteorology',
+    'paleontology',
+    'rockets',
+]
 
-skills = ['cooking', 'meterology', 'paleontology', 'dinosaurs', 'biology', 'fish',
-          'rockets', 'horses', 'farming', 'accounting']
+first_names = [
+    'Ai',
+    'Antonia',
+    'Antonio',
+    'Bob',
+    'Cary',
+    'Charlotte',
+    'Emma',
+    'Esmerelda',
+    'Ethelmay',
+    'Ethelred',
+    'Fang',
+    'Fatima',
+    'Joe',
+    'John',
+    'Mary',
+    'Mina',
+    'Mohammed',
+    'Pedro',
+    'Pierre',
+    'Robert',
+    'Rufus',
+    'Sam',
+    'Susan',
+]
 
-first_names = ['Bob', 'Susan', 'Joe', 'Charlotte', 'Rufus', 'Esmerelda', 'Ethelred', 'Ethelmay',
-               'John', 'Mary', 'Sam', 'Emma', 'Robert', 'Cary', 'Mohammed', 'Pierre', 'Mina',
-               'Antonio', 'Fatima', 'Antonia', 'Pedro', 'Fang', 'Ai'
-           ]
-last_names = ['Smith', 'Wu', 'Williams', 'Johnson', 'Jones', 'Davis',
-              'Rodriguez', 'Garcia', 'Gonzalez', 'White', 'Lopez', 'Robinson',
-              'Walker', 'Perez', 'Wright', 'King', 'Campbell', 'Evans', 'Carter']
+last_names = [
+    'Campbell',
+    'Carter',
+    'Davis',
+    'Evans',
+    'Garcia',
+    'Gonzalez',
+    'Johnson',
+    'Jones',
+    'King',
+    'Lopez',
+    'Perez',
+    'Robinson',
+    'Rodriguez',
+    'Smith',
+    'Walker',
+    'White',
+    'Williams',
+    'Wright',
+    'Wu',
+]
 
 labels = {
     'GradeLevels': [
@@ -48,24 +94,25 @@ labels = {
     ],
 }
 
-def get_labels():
-    my_labels = []
-    label_sets = [
-        (labels['GradeLevels'], 0.5),
-        (labels['SubjectAreas'], 0.2),
-        (labels['LevelOfEngagement'], 0.2),
-        (skills, 0.3),
-    ]
-    for label_set, probability in label_sets:
-        for label in label_set:
-            if random.random() < probability:
-                my_labels.append(label)
-    return my_labels
+label_probabilities = [
+    (labels['GradeLevels'], 0.5),
+    (labels['SubjectAreas'], 0.2),
+    (labels['LevelOfEngagement'], 0.2),
+    (skills, 0.3),
+]
+
 
 profile_picture_filenames = [
-    'aardvark.jpg', 'gila_monster.jpg', 'octopus.jpg', 'sloth.jpg',
-    'ant.jpg', 'honey_badger.jpg', 'pig.jpg',
-    'dolphin.jpg', 'llama.jpg', 'shiba.jpg',
+    'aardvark.jpg',
+    'ant.jpg',
+    'dolphin.jpg',
+    'gila_monster.jpg',
+    'honey_badger.jpg',
+    'llama.jpg',
+    'octopus.jpg',
+    'pig.jpg',
+    'shiba.jpg',
+    'sloth.jpg',
 ]
 
 school_infos = [
@@ -79,65 +126,69 @@ educator_roles = [
 ]
 
 partner_roles = [
-    'Intern',
     'CEO',
     'Engineer',
+    'Intern',
     'Sales Representative',
 ]
 
-company_infos = [('Big Univeristy', 'University'),
-                ('Acme', 'Company'),
-                ('City Opera', 'Nonprofit'),
-                ('Widget Factory', 'Company'),
-                ('Secret Goverment Research Lab', 'Goverment'),
-                ('Myself', 'Freelancer'),
-                ('Copper Mine', 'Company'),
-            ]
-specialties = ['robotic molluscs',
-               'portmodern composition',
-               'mass surveillance',
-               'classical portraiture',
-               'laying fibreoptic cable',
-               'interpretative dance',
-           ]
-hobbies = ['underwater skiing.',
-           'playing competitive hide-and-seek.',
-           'playing minecraft',
-           'french cooking',
-           'watching reality TV',
-           'training for marathons',
-           'juggling'
-       ]
+company_infos = [
+    ('Big University', 'University'),
+    ('Acme', 'Company'),
+    ('City Opera', 'Nonprofit'),
+    ('Widget Factory', 'Company'),
+    ('Secret Government Research Lab', 'Government'),
+    ('Myself', 'Freelancer'),
+    ('Copper Mine', 'Company'),
+]
+
+specialties = [
+    'classical portraiture',
+    'interpretative dance',
+    'laying fiber-optic cable',
+    'mass-surveillance',
+    'postmodern composition',
+    'robotic molluscs',
+]
+
+hobbies = [
+    'underwater skiing.',
+    'playing competitive hide-and-seek.',
+    'playing minecraft',
+    'french cooking',
+    'watching reality TV',
+    'training for marathons',
+    'juggling'
+]
+
+def gen_email(first_name, last_name):
+    return '{0}.{1}@example.com'.format(first_name, last_name)
+
+def gen_labels():
+    return [
+        label
+        for label_set, probability in label_probabilities
+        for label in label_set
+        if random.random() < probability
+    ]
 
 def make_institutions(infos):
-    institutions = []
-    for name, institution_type in infos:
-        institution = Institution(
-            name=name,
-            institution_type=institution_type,
-         )
-        institutions.append(institution)
-    return institutions
+    return [
+        Institution(name=name,institution_type=institution_type)
+        for name, institution_type in infos
+    ]
 
 companies = make_institutions(company_infos)
 schools = make_institutions(school_infos)
 
-def random_item_from_list(ll):
-    item = ll[random.randint(0, len(ll)-1)]
-    return item
-
 def generate_expert_bio():
-    bio_template = "I specialize in the area of {0}.  My main hobby is {1}."
-    specialty = random_item_from_list(specialties)
-    hobby = random_item_from_list(hobbies)
-    bio = bio_template.format(specialty, hobby)
-    return bio
+    specialty = random.choice(specialties)
+    hobby = random.choice(hobbies)
+    return "I specialize in the area of {0}.  My main hobby is {1}.".format(specialty, hobby)
 
 def generate_educator_bio():
-    bio_template = "My main hobby is {0}"
-    hobby = random_item_from_list(hobbies)
-    bio = bio_template.format(hobby)
-    return bio
+	bio = "My main hobby is {0}".format(random.choice(hobbies))
+	return bio
 
 def make_random_location():
     latitude = 32.223303 + (random.random()-0.5)+0.1
@@ -145,63 +196,85 @@ def make_random_location():
     return (latitude, longitude)
 
 user_names_used = set()
+
+def gen_new_name(existing_users, first_names, last_names):
+    max_combinations = len(first_names) * len(last_names)
+
+    # stop trying after a while to keep from infinite iteration
+    for attempt_count in range(max_combinations):
+        name_pair = (random.choice(first_names), random.choice(last_names))
+        if name_pair not in existing_users:
+            return name_pair
+
+    return None, None
+
+def gen_random_institution(institutions, roles):
+    return InstitutionAssociation(
+        institution=random.choice(institutions),
+        role=random.choice(roles)
+    )
+
 def make_random_user():
     # Make the user
-    finished = False
-    while not finished:
-        first_name = random_item_from_list(first_names)
-        last_name = random_item_from_list(last_names)
-        combined = (first_name, last_name)
-        if combined not in user_names_used:
-            finished = True
-            user_names_used.add(combined)
+    first_name, last_name = gen_new_name(user_names_used, first_names, last_names)
+
+    if first_name is None:
+        return
+
+    user_names_used.add((first_name, last_name))
+
     password = Secret.make_key(20)
-    email = make_email(first_name, last_name)
     password_hash = User.pwd_context.encrypt(password)
-    name = '{0} {1}'.format(first_name, last_name)
-    picture_filename = random_item_from_list(profile_picture_filenames)
-    randombinary = random.randint(0, 1)
-    if randombinary:
+
+    if random.randint(0, 1):
         searcher_role = 'educator'
         searching_for_role = 'partner'
         bio = generate_educator_bio()
-        institution_associations = [
-            InstitutionAssociation(
-                institution=random_item_from_list(schools),
-                role=random_item_from_list(educator_roles)
-            )]
+        associations = [
+            gen_random_institution(schools, educator_roles)
+        ]
     else:
         searcher_role = 'partner'
         searching_for_role = 'educator'
         bio = generate_expert_bio()
-        n_institutions = random.randint(1, 2)
-        institution_associations = [
-            InstitutionAssociation(
-                institution=random_item_from_list(companies),
-                role=random_item_from_list(partner_roles))
-            for x in range(n_institutions)]
-    new_user = User(name=name, email=email, password_hash=password_hash,
-                    picture_filename=picture_filename, bio=bio,
-                    institution_associations=institution_associations,
-                    is_administrator=False, email_confirmed=True)
+        associations = [
+            gen_random_institution(companies, partner_roles)
+            for _ in range(random.randint(1, 2))
+        ]
+
+    new_user = User(
+        name='{0} {1}'.format(first_name, last_name),
+        email=gen_email(first_name, last_name),
+        password_hash=password_hash,
+        picture_filename=random.choice(profile_picture_filenames),
+        bio=bio,
+        institution_associations=associations,
+        is_administrator=False,
+        email_confirmed=True
+    )
+
     store.session.add(new_user)
     store.session.commit()
+
     # Make the search
-    location = make_random_location()
+    latitude, longitude = make_random_location()
     search = Search(
         searcher_user_id=new_user.id,
         searcher_role=searcher_role,
         searching_for_role=searching_for_role,
-        latitude=location[0],
-        longitude=location[1],
+        latitude=latitude,
+        longitude=longitude,
     )
-    search.labels = Label.name_list_to_object_list(get_labels())
+    search.labels = Label.name_list_to_object_list(gen_labels())
+
     store.session.add(search)
     store.session.commit()
+
     if search.searcher_role == 'educator':
         new_user.educator_profile_search = search
     else:
         new_user.community_partner_profile_search = search
+
     store.session.add(new_user)
     store.session.commit()
 
@@ -294,3 +367,8 @@ def setup(n_random_users=100):
     update_questions(questions)
     store.session.commit()
 
+if __name__ == '__main__':
+    logger.info('Loading settings from environment')
+    config.load_from_file()
+    logger.info('Finished loading settings')
+    setup(n_random_users=40)
